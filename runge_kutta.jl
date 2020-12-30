@@ -25,7 +25,8 @@ end
 # logistic growth for chosen constants
 f(t, y) = 0.6y*(1 - y / 10)
 array = runge_kutta(f, 0, 1, 20)
-
+𝐫 = plot(LinRange(0, 20, length(array)), array)
+display(𝐫)
 
 # https://en.smath.com/wiki/GetFile.aspx?File=Examples/RK4SystemEquations.pdf
 # examples below are taken from this url
@@ -40,7 +41,7 @@ Y = [-1, 1]
     evaluate(array::Array{Function, 1}, X::Real, Y::Array{Real, 1})::Array{Real, 1}
 Return an array with values of function f(t, y₁, y₂) defined in array for given point X
 """
-function evaluate(array::Array{Function, 1}, X::Real, Y::Array{Real, 1})::Array{Real, 1}
+function evaluate(array::Array{Function, 1}, X::Real, Y)::Array{Real, 1}
     return [i(X, Y[1], Y[2]) for i in array]
 end
 
@@ -50,7 +51,7 @@ end
 Return an array with values of functions which are solutions to the system of differential equations defined by the array.
 X and Y are initial conditions, x is the maximum point.
 """
-function runge_kutta_for_systems(F::Array{Function, 1}, x::Real, X::Real, Y::Array{Real, 1}, h::Real=1e-3)
+function runge_kutta_for_systems(F::Array{Function, 1}, x::Real, X::Real, Y::Array, h::Real=1e-3)
     n = round(Int64, x / h)
     array = zeros((n, 2))
     for i in 1:n
@@ -77,7 +78,7 @@ display(𝑝)
 # harmonic oscillator ẍ + x = 0
 # can be rewritten as
 # ẋ = y, ẏ = -x
-# note that y is momentum ⃗p
+# note that y is velocity ⃗v
 
 
 array2 = [(t, y₁, y₂) -> y₂, (t, y₁, y₂) -> -y₁]

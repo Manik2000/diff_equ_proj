@@ -7,7 +7,7 @@ array = [(t, y₁, y₂) -> (y₁ * (1.0 + y₂)),
 
 function phase_portrait(𝐹::Array{Function, 1}, P::Number, title::String, xlab::String, ylab::String)
     f(x, y) = Point2f0(𝐹[1](0, x, y), 𝐹[2](0, x, y))
-    xs = ys = LinRange(0, P, 3 * ceil(P - 0))
+    xs = ys = LinRange(0, P, 3 * ceil(P))
     scene = streamplot(f, xs, ys, arrow_size=0.5, linewidth=1, colormap=:magma)  # arrow_size, colormap
     axis = scene[Axis]
     axis.names.axisnames = (xlab, ylab)

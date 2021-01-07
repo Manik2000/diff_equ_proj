@@ -1,5 +1,4 @@
 using Plots
-pgfplotsx()
 
 
 """
@@ -34,24 +33,25 @@ display(𝐫)
 array  = [(t, y₁, y₂) -> sin(t) + cos(y₁) + sin(y₂),
         (t, y₁, y₂) -> cos(t) + sin(y₂)]
 X = 0
-Y = [-1, 1]
+Y = [-1., 1.]
+
 
 
 """
     evaluate(array::Array{Function, 1}, X::Real, Y::Array{Real, 1})::Array{Real, 1}
 Return an array with values of function f(t, y₁, y₂) defined in array for given point X
 """
-function evaluate(array::Array{Function, 1}, X::Real, Y)::Array{Real, 1}
+function evaluate(array::Array{Function, 1}, X::Real, Y::Array{T, 1})::Array{T, 1} where T <: Real
     return [i(X, Y[1], Y[2]) for i in array]
 end
 
 
 """
-    runge_kutta_for_systems(F::Array{Function, 1}, x::Real, X::Real, Y::Array{Real, 1}, h::Real=1e-3)
+    runge_kutta(F::Array{Function, 1}, x::Real, X::Real, Y::Array{T, 1}, h::Real=1e-3)::Array{T, 2} where T <: Real
 Return an array with values of functions which are solutions to the system of differential equations defined by the array.
 X and Y are initial conditions, x is the maximum point.
 """
-function runge_kutta_for_systems(F::Array{Function, 1}, x::Real, X::Real, Y::Array, h::Real=1e-3)
+function runge_kutta(F::Array{Function, 1}, x::Real, X::Real, Y::Array{T, 1}, h::Real=1e-3)::Array{T, 2} where T <: Real
     n = round(Int64, x / h)
     array = zeros((n, 2))
     for i in 1:n
@@ -67,7 +67,7 @@ function runge_kutta_for_systems(F::Array{Function, 1}, x::Real, X::Real, Y::Arr
 end
 
 
-a = runge_kutta_for_systems(array, 20, 0, Y)
+a = runge_kutta(array, 20, X, Y)
 
 𝑝 = plot(LinRange(0, 5, length(a[:, 1])), a[:, 1])
 plot!(LinRange(0, 5, length(a[:, 2])), a[:, 2])
@@ -82,8 +82,8 @@ display(𝑝)
 
 
 array2 = [(t, y₁, y₂) -> y₂, (t, y₁, y₂) -> -y₁]
-Y2 = [0, 1]
-b = runge_kutta_for_systems(array2, 30, 0, Y2)
+Y2 = [0., 1.]
+b = runge_kutta(array2, 30, 0, Y2)
 
 𝑞 = plot(LinRange(0, 5, length(b[:, 1])), b[:, 1])
 display(𝑞)
@@ -92,7 +92,7 @@ display(𝑞)
 display(𝑤)
 
 # vector field for harmonic oscillator
-xs = LinRange(0, 5, length(b[:, 1]))
+xs = LinRange(0, 5, length(b[1, :]))
 
 xs = xs[1:150:end]
 xs |>println
